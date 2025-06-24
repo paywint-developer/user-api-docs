@@ -62,7 +62,7 @@
   ],
   "api": {
     "openapi": {
-      "source": "https://repair-stem-rpm-amounts.trycloudflare.com/openapi.json",
+      "source": "https://api.sandbox.paywint.com/openapi.json",
       "directory": "api-reference"
     }
   },
