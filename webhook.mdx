@@ -1,0 +1,43 @@
+---
+title: "Webhooks"
+description: "Learn how to receive and handle Paywint webhook events."
+icon: "wifi"
+---
+
+## Overview
+
+Paywint uses webhooks to notify your platform when key events occur — such as user KYC changes, KYB reviews, wallet activity, or card uploads.
+
+This guide helps you implement and test your webhook endpoint to receive and respond to these real-time notifications.
+
+---
+
+## Webhook Events
+
+You may receive webhook notifications for the following event types:
+
+| Category | Event Type |
+|----------|------------|
+| KYC | `kyc.applied`<br />`kyc.approved`<br />`kyc.rejected`<br />`kyc.failed`<br />`kyc.completed` |
+| KYB | `kyb.approved`<br />`kyb.rejected` |
+| Wallet | `wallet.funded`<br />`wallet.withdrawn` |
+| Card | `card.added`<br />`card.images_uploaded` |
+
+Each event will be sent to the webhook URL configured on your platform account.
+
+---
+
+## Webhook Payload Format
+
+Each webhook is sent as a `POST` request with the following JSON structure:
+
+```json
+{
+  "event": "kyc.completed",
+  "id": "a891bfc2-ffff-464b-89e4-xxxxx",
+  "status": "completed",
+  "data": {
+    // Event-specific payload
+  },
+  "eventGeneratedTime": 1718006400.0
+}

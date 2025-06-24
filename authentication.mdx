@@ -1,0 +1,28 @@
+---
+title: "Authentication"
+description: "We use API key based authentication to verify and authorize all requests to the Paywint API."
+icon: "key"
+---
+**All API requests to Paywint must be made over HTTPS and authenticated using an API key.**
+Include the API key in the request header as `X-Api-Key`, and  `X-Api-Secret`.
+
+```curl Example Api Call
+curl -X POST "https://<environment>/api/example" \
+  -H "Content-Type: application/json" \
+  -H "X-Api-Key: YOUR_API_KEY" \
+  -H "X-Api-Secret: YOUR_API_SECRET" \
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "phone": "9876543210",
+    "phone_country_code": "+1"
+  }'
+
+```
+
+Make sure to use the correct API key for the appropriate [environment](/environments). Using the wrong key or URL may result in authentication failures.
+
+Keep your API key secure and never expose it on the client side.
+
+---
+Need help? Reach out to support@paywint.com

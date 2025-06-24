@@ -1,0 +1,8 @@
+add
+,
+  "api": {
+    "openapi": {
+      "source": "https://rough-alto-forgotten-aud.trycloudflare.com/openapi.json",
+      "directory": "api-reference"
+    }
+  }
