@@ -22,7 +22,8 @@
         {
             "group": "Payment",
             "pages": [
-              "api-reference/payment/create-payment"
+              "api-reference/payment/create-payment",
+              "api-reference/payment/get-payment"
             ]
         }
     ]
