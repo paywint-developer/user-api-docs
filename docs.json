@@ -27,6 +27,12 @@
               "api-reference/payment/list-send-payments",
               "api-reference/payment/list-received-payments"
             ]
+        },
+        {
+            "group": "Wallet",
+            "pages": [
+              "api-reference/wallet/get-wallet"
+            ]
         }
     ]
   },
