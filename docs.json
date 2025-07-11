@@ -24,7 +24,7 @@
             "pages": [
               "api-reference/payment/create-payment",
               "api-reference/payment/get-payment",
-              "api-reference/payment/list-send-payments",
+              "api-reference/payment/list-sent-payments",
               "api-reference/payment/list-received-payments"
             ]
         },
