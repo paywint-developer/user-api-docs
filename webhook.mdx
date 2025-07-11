@@ -18,7 +18,7 @@ You may receive webhook notifications for the following event types:
 
 | Category | Event Type |
 |----------|------------|
-| Payment | `payment.initiated`<br />`payment.processing`<br />`payment.failed`<br />`payment.approved`<br />`payment.rejected` |
+| Payment | `payment.initiated`<br />`payment.processing`<br />`payment.success`<br />`payment.failed`<br />`payment.rejected`<br />`payment.refunded`<br />`payment.processing_fee_refunded` |
 
 Each event will be sent to the webhook URL configured on your platform account.
 
@@ -30,11 +30,27 @@ Each webhook is sent as a `POST` request with the following JSON structure:
 
 ```json
 {
-  "event": "payment.initiated",
+  "event": "kyc.applied",
   "id": "a891bfc2-ffff-464b-89e4-xxxxx",
-  "webhook_status": "completed",  // or "delivered"
   "data": {
     // Event-specific payload
   },
   "eventGeneratedTime": 1718006400.0
 }
+````
+
+* `event`: Type of the event that occurred.
+* `id`: Unique identifier for this webhook delivery.
+* `data`: Event-specific payload object.
+* `eventGeneratedTime`: UNIX timestamp (in seconds) when the event was generated.
+
+---
+
+## Delivery & Retry Behavior
+
+If your webhook endpoint fails to acknowledge an event (i.e., does not return a `2xx` HTTP response), Paywint will automatically retry delivery up to **two more times**, for a total of **three attempts** per event.
+
+* All retries are sent within a predefined timeframe.
+* If all three attempts fail, Paywint will notify your account’s **email** with details of the failed event.
+
+> **Note:** To avoid missed events, ensure your webhook endpoint is highly available and returns `200 OK` quickly, even if internal processing happens asynchronously.
