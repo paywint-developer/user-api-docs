@@ -6,27 +6,56 @@ icon: "wifi"
 
 ## Overview
 
-Paywint uses webhooks to notify your platform when key events occur — such as user KYC changes, KYB reviews, wallet activity, or card uploads.
+This page explains how to set up and use webhooks.
 
-This guide helps you implement and test your webhook endpoint to receive and respond to these real-time notifications.
+To begin, you must configure a single URL endpoint that will receive `POST` requests. This endpoint should be hosted on a server you control and be capable of processing incoming webhook payloads.
+
+All webhook events—such as `initiated`, `processing`, `success`, `failed`, and `rejected`—will be sent to the configured URL.
+
+---
+
+
+## Where To Setup
+
+### Sandbox
+To configure webhooks in the **Sandbox environment**:
+
+1. Go to [Sandbox Dashboard → URLs](https://sandbox.app.paywint.com/app/developer-panel/urls).
+2. Enter your webhook endpoint URL in the provided field.
+
+### Production
+To configure webhooks in the **Production environment**:
+
+1. Go to [Production Dashboard → URLs](https://app.paywint.com/app/developer-panel/urls).
+2. Enter your webhook endpoint URL in the provided field.
 
 ---
 
 ## Webhook Events
 
-You may receive webhook notifications for the following event types:
+Below is the list of webhook events sent by Paywint.
 
-| Category | Event Type |
-|----------|------------|
-| Payment | `payment.initiated`<br />`payment.processing`<br />`payment.success`<br />`payment.failed`<br />`payment.rejected`<br />`payment.refunded`<br />`payment.processing_fee_refunded` |
+| Event Name                    | Description                            |
+|-------------------------------|----------------------------------------|
+| `payment.initiated`           | Payment was initiated.                 |
+| `payment.processing`          | Payment is being processed.            |
+| `payment.success`             | Payment was successful.                |
+| `payment.failed`              | Payment failed.                        |
+| `payment.rejected`            | Payment was rejected.                  |
+| `payment.refunded`            | Payment was refunded.                  |
+| `payment.processing_fee_refunded` | Processing fee for payment refunded. |
 
-Each event will be sent to the webhook URL configured on your platform account.
 
----
+## Basic Structure
 
-## Webhook Payload Format
+| Field                | Description                                               |
+| -------------------- | --------------------------------------------------------- |
+| `event`              | The type of event that occurred (e.g., `kyc.applied`).    |
+| `id`                 | A unique identifier for this webhook delivery.            |
+| `data`               | The event-specific payload object.                        |
+| `eventGeneratedTime` | UNIX timestamp (in seconds) when the event was generated. |
 
-Each webhook is sent as a `POST` request with the following JSON structure:
+Example payload:
 
 ```json
 {
@@ -39,18 +68,13 @@ Each webhook is sent as a `POST` request with the following JSON structure:
 }
 ````
 
-* `event`: Type of the event that occurred.
-* `id`: Unique identifier for this webhook delivery.
-* `data`: Event-specific payload object.
-* `eventGeneratedTime`: UNIX timestamp (in seconds) when the event was generated.
-
 ---
 
 ## Delivery & Retry Behavior
 
-If your webhook endpoint fails to acknowledge an event (i.e., does not return a `2xx` HTTP response), Paywint will automatically retry delivery up to **two more times**, for a total of **three attempts** per event.
+If your webhook endpoint fails to return a `2xx` HTTP response, Paywint will automatically retry delivery up to **two more times**, for a total of **three attempts** per event.
 
-* All retries are sent within a predefined timeframe.
-* If all three attempts fail, Paywint will notify your account’s **email** with details of the failed event.
+* Retries are sent within a predefined timeframe.
+* If all three attempts fail, Paywint will notify your **email** with details of the failed event.
 
-> **Note:** To avoid missed events, ensure your webhook endpoint is highly available and returns `200 OK` quickly, even if internal processing happens asynchronously.
+> **Note:** To avoid missed events, ensure your webhook endpoint is highly available and returns `200 OK` quickly. Any internal processing should happen asynchronously to avoid missed events.
