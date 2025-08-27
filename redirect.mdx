@@ -1,119 +1,83 @@
 ---
 title: "Redirects"
-description: "Learn how to configure and handle Paywint payment redirects in your frontend."
+description: "Display a confirmation page with your customer's order information."
 icon: "arrow-turn-left"
 ---
 
-## Overview
+When someone makes a payment using Paywint Checkout, they are taken to Paywint’s secure checkout page.
+After the payment attempt is finished—whether it succeeds or fails—Paywint automatically **redirects the customer back to your website**.
 
-For **payment flows**, Paywint can redirect customers back to your application using a **Callback URL**.  
-This lets your frontend know the outcome of the payment attempt so you can display the appropriate result to the user.
-
-At minimum, Paywint will include:
-
-- `id`: the Paywint payment identifier  
-- `status`: the outcome of the payment  
-
-Your frontend should use these values to render confirmation, show error messages, or trigger client-side requests to fetch full details.
+This is called a **Redirect**, and it’s how your site knows the result of the payment so you can show the appropriate message.
 
 ---
 
-## Where To Setup
+## How It Works
 
-### Sandbox
+1. Your customer clicks “Pay” in your app or website.  
+2. Paywint opens its secure checkout page.  
+3. The customer chooses a payment method and completes the process.  
+4. When the payment finishes, Paywint **redirects the customer back to the page you chose** (your “Callback URL”).  
+5. Paywint adds two small pieces of information to the web address when sending them back:  
 
-To configure the **Sandbox Callback URL**:
+   * `id`: the unique Paywint payment number  
+   * `status`: the result of the payment (`success`, `failed`, or `rejected`)  
 
-1. Go to **[Sandbox Dashboard → URLs](https://sandbox.app.paywint.com/app/developer-panel/urls)**.
-2. Under **Payment Callback URL**, enter the absolute URL of your frontend page  
-   (e.g., `https://sandbox.yourapp.com/checkout/result`).
-
-### Production
-
-To configure the **Production Callback URL**:
-
-1. Go to **[Production Dashboard → URLs](https://app.paywint.com/app/developer-panel/urls)**.
-2. Under **Payment Callback URL**, enter the absolute URL of your frontend page  
-   (e.g., `https://yourapp.com/checkout/result`).
-
-> You can set different Callback URLs for Sandbox and Production. Make sure your frontend route exists in both environments.
+That’s it—the customer is now back on your site, and you know what happened with their payment.
 
 ---
 
-## Callback Flow
+## Example Redirects
 
-1. A customer attempts a payment on Paywint’s hosted page.
-2. When the flow completes, Paywint redirects the browser to your configured **Callback URL**.
-3. Query parameters are appended to the URL so your frontend can read the payment result.
-4. (Recommended) Your page then calls your backend to fetch authoritative details (or waits for the matching **webhook** event).
-
----
-
-## Query Parameters
-
-| Parameter | Type   | Description                                 |
-| --------- | ------ | ------------------------------------------- |
-| `id`      | string | The Paywint payment ID.                     |
-| `status`  | string | Outcome of the payment. See below for values |
-
-### Example Callback Redirects
+After a payment, Paywint might send the customer back to your site like this:
 
 ```text
-https://yourapp.com/checkout/result?id=pay_9f3a2c&status=success
-https://yourapp.com/checkout/result?id=pay_9f3a2c&status=failed
+https://yourapp.com/checkout/result?status=success&id=pay_9f3a2c
+https://yourapp.com/checkout/result?status=failed&id=pay_9f3a2c
 ````
 
----
-
-## Possible Status Values
-
-The `status` reflects the result at **callback time**:
-
-| Status     | When it occurs                                                  | Typical Next Step                        |
-| ---------- | --------------------------------------------------------------- | ---------------------------------------- |
-| `success`  | The payment was completed successfully.                         | Show success UI; verify server-side.     |
-| `failed`   | The payment attempt failed (e.g., processor/issuer error).      | Show failure UI; allow retry.            |
-| `rejected` | The payment was explicitly rejected (e.g., risk/manual review). | Show rejection UI; provide support path. |
-
-> **Note:** Some payment methods settle asynchronously. A callback with `processing` may later resolve to `success` or `failed`. Use **webhooks** for the authoritative final state.
+Notice the extra `id` and `status` at the end of the web address. You can use these values to decide what message to show your customer.
 
 ---
 
-## Working With Webhooks
+## What the Status Means
 
-Callback URLs are **customer-facing** and immediate. Webhooks are **server-to-server** and reliable.
-For the best experience:
+| Status     | What it means for the payment              | What you might show your customer                    |
+| ---------- | ------------------------------------------ | ---------------------------------------------------- |
+| `success`  | The payment went through.                  | “Payment successful! Thank you for your order.”      |
+| `failed`   | The payment did not go through.            | “Something went wrong. Please try again.”            |
 
-1. **Render immediately** based on the `status` in the callback.
-2. **Confirm** the final state server-side by:
-
-   * Waiting for the matching webhook (recommended), or
-   * Fetching the payment from Paywint via your backend.
-
-See the **Webhooks** page for details.
+> Some payment methods may first show `processing`. This means the final result will come later. In those cases, your system should wait for confirmation (via webhook or checking the payment details in Paywint).
 
 ---
 
-## Testing Tips
+## Where to Set the Callback URL
 
-* Use **Sandbox** to test different payment outcomes (`success`, `failed`).
-* Manually append query strings in development (e.g., `?id=demo123&status=success`) to simulate results.
-* Ensure your app handles **missing** or **unexpected** query parameters gracefully.
+You decide the page where customers should land after payment. This is called your **Callback URL**.
+
+* **Sandbox (testing):**
+  Go to [Sandbox Dashboard → URLs](https://sandbox.app.paywint.com/app/developer-panel/urls) and enter your page link,
+  e.g. `https://sandbox.yourapp.com/checkout/result`.
+
+* **Production (live):**
+  Go to [Production Dashboard → URLs](https://app.paywint.com/app/developer-panel/urls) and enter your live page link,
+  e.g. `https://yourapp.com/checkout/result`.
+
+You can set different Callback URLs for Sandbox and Production. Just make sure the page exists in both environments.
 
 ---
 
-## Security & Integrity
+## Why This Matters
 
-* Treat query parameters as **untrusted input**. Do **not** mark an order as paid based only on the callback.
-* Always rely on your backend verification (via webhook or API fetch) to finalize payment records.
+* Redirects let your customers **come back to your app smoothly** after paying.
+* You can immediately show them a confirmation screen (success, failure, or rejection).
+* To be 100% sure of the final result, your system should also check Paywint’s webhook or fetch the payment details.
 
 ---
 
-## Example: Putting It All Together
+## Quick Setup
 
-1. Configure the **Payment Callback URL** in the Dashboard.
-2. Build a frontend route (e.g., `/checkout/result`) to parse `id` and `status`.
-3. On load, call your backend or wait for a webhook to confirm the payment’s final state.
-4. Render success, failure, or rejection UI and guide the user to the next step (view order, retry, support).
+1. In your Paywint Dashboard, set your **Payment Callback URL** (the page where customers should land after payment).
+2. Make sure this page can read the `status` and `id` from the web address.
+3. Show your customer the right message based on the result.
 
-That’s it — with the Callback URL, your users return smoothly to your app, while webhooks keep your system consistent.
+That’s all—your customers always end up back in your app, and you can guide them to their next step.
