@@ -1,0 +1,119 @@
+---
+title: "Redirects"
+description: "Learn how to configure and handle Paywint payment redirects in your frontend."
+icon: "arrow-turn-left"
+---
+
+## Overview
+
+For **payment flows**, Paywint can redirect customers back to your application using a **Callback URL**.  
+This lets your frontend know the outcome of the payment attempt so you can display the appropriate result to the user.
+
+At minimum, Paywint will include:
+
+- `id`: the Paywint payment identifier  
+- `status`: the outcome of the payment  
+
+Your frontend should use these values to render confirmation, show error messages, or trigger client-side requests to fetch full details.
+
+---
+
+## Where To Setup
+
+### Sandbox
+
+To configure the **Sandbox Callback URL**:
+
+1. Go to **[Sandbox Dashboard → URLs](https://sandbox.app.paywint.com/app/developer-panel/urls)**.
+2. Under **Payment Callback URL**, enter the absolute URL of your frontend page  
+   (e.g., `https://sandbox.yourapp.com/checkout/result`).
+
+### Production
+
+To configure the **Production Callback URL**:
+
+1. Go to **[Production Dashboard → URLs](https://app.paywint.com/app/developer-panel/urls)**.
+2. Under **Payment Callback URL**, enter the absolute URL of your frontend page  
+   (e.g., `https://yourapp.com/checkout/result`).
+
+> You can set different Callback URLs for Sandbox and Production. Make sure your frontend route exists in both environments.
+
+---
+
+## Callback Flow
+
+1. A customer attempts a payment on Paywint’s hosted page.
+2. When the flow completes, Paywint redirects the browser to your configured **Callback URL**.
+3. Query parameters are appended to the URL so your frontend can read the payment result.
+4. (Recommended) Your page then calls your backend to fetch authoritative details (or waits for the matching **webhook** event).
+
+---
+
+## Query Parameters
+
+| Parameter | Type   | Description                                 |
+| --------- | ------ | ------------------------------------------- |
+| `id`      | string | The Paywint payment ID.                     |
+| `status`  | string | Outcome of the payment. See below for values |
+
+### Example Callback Redirects
+
+```text
+https://yourapp.com/checkout/result?id=pay_9f3a2c&status=success
+https://yourapp.com/checkout/result?id=pay_9f3a2c&status=failed
+````
+
+---
+
+## Possible Status Values
+
+The `status` reflects the result at **callback time**:
+
+| Status     | When it occurs                                                  | Typical Next Step                        |
+| ---------- | --------------------------------------------------------------- | ---------------------------------------- |
+| `success`  | The payment was completed successfully.                         | Show success UI; verify server-side.     |
+| `failed`   | The payment attempt failed (e.g., processor/issuer error).      | Show failure UI; allow retry.            |
+| `rejected` | The payment was explicitly rejected (e.g., risk/manual review). | Show rejection UI; provide support path. |
+
+> **Note:** Some payment methods settle asynchronously. A callback with `processing` may later resolve to `success` or `failed`. Use **webhooks** for the authoritative final state.
+
+---
+
+## Working With Webhooks
+
+Callback URLs are **customer-facing** and immediate. Webhooks are **server-to-server** and reliable.
+For the best experience:
+
+1. **Render immediately** based on the `status` in the callback.
+2. **Confirm** the final state server-side by:
+
+   * Waiting for the matching webhook (recommended), or
+   * Fetching the payment from Paywint via your backend.
+
+See the **Webhooks** page for details.
+
+---
+
+## Testing Tips
+
+* Use **Sandbox** to test different payment outcomes (`success`, `failed`).
+* Manually append query strings in development (e.g., `?id=demo123&status=success`) to simulate results.
+* Ensure your app handles **missing** or **unexpected** query parameters gracefully.
+
+---
+
+## Security & Integrity
+
+* Treat query parameters as **untrusted input**. Do **not** mark an order as paid based only on the callback.
+* Always rely on your backend verification (via webhook or API fetch) to finalize payment records.
+
+---
+
+## Example: Putting It All Together
+
+1. Configure the **Payment Callback URL** in the Dashboard.
+2. Build a frontend route (e.g., `/checkout/result`) to parse `id` and `status`.
+3. On load, call your backend or wait for a webhook to confirm the payment’s final state.
+4. Render success, failure, or rejection UI and guide the user to the next step (view order, retry, support).
+
+That’s it — with the Callback URL, your users return smoothly to your app, while webhooks keep your system consistent.
