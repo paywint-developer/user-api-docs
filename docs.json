@@ -9,31 +9,32 @@
   },
   "favicon": "/favicon.ico",
   "navigation": {
-      "groups": [
-        {
-            "group": "Get Started",
-            "pages": [
-                "introduction",
-                "environments",
-                "authentication",
-                "webhook"
-            ]
-        },
-        {
-            "group": "Payment",
-            "pages": [
-              "api-reference/payment/create-payment",
-              "api-reference/payment/get-payment",
-              "api-reference/payment/list-sent-payments",
-              "api-reference/payment/list-received-payments"
-            ]
-        },
-        {
-            "group": "Wallet",
-            "pages": [
-              "api-reference/wallet/get-wallet"
-            ]
-        }
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "environments",
+          "authentication",
+          "webhook",
+          "redirect"
+        ]
+      },
+      {
+        "group": "Payment",
+        "pages": [
+          "api-reference/payment/create-payment",
+          "api-reference/payment/get-payment",
+          "api-reference/payment/list-sent-payments",
+          "api-reference/payment/list-received-payments"
+        ]
+      },
+      {
+        "group": "Wallet",
+        "pages": [
+          "api-reference/wallet/get-wallet"
+        ]
+      }
     ]
   },
   "logo": {
