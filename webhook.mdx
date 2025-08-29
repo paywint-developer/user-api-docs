@@ -14,7 +14,6 @@ All webhook events—such as `initiated`, `processing`, `success`, `failed`, and
 
 ---
 
-
 ## Where To Setup
 
 ### Sandbox
@@ -42,13 +41,15 @@ Below is the list of webhook events sent by Paywint.
 | `payment.success`             | Payment was successful.                |
 | `payment.failed`              | Payment failed.                        |
 | `payment.rejected`            | Payment was rejected.                  |
+| `payment.retried`             | Payment was retried with new payment ID. |
 
+---
 
 ## Basic Structure
 
 | Field                | Description                                               |
 | -------------------- | --------------------------------------------------------- |
-| `event`              | The type of event that occurred (e.g., `kyc.applied`).    |
+| `event`              | The type of event that occurred (e.g., `payment.success`). |
 | `id`                 | A unique identifier for this webhook delivery.            |
 | `data`               | The event-specific payload object.                        |
 | `eventGeneratedTime` | UNIX timestamp (in seconds) when the event was generated. |
@@ -57,14 +58,16 @@ Example payload:
 
 ```json
 {
-  "event": "kyc.applied",
+  "event": "payment.success",
   "id": "a891bfc2-ffff-464b-89e4-xxxxx",
   "data": {
-    // Event-specific payload
+    "payment_id": "b91a0f36-b10b-4a31-ae12-e8b4c5ee71f4",
+    "status": "success",
+    "amount": 599
   },
   "eventGeneratedTime": 1718006400.0
 }
-````
+```
 
 ---
 
@@ -76,3 +79,13 @@ If your webhook endpoint fails to return a `2xx` HTTP response, Paywint will aut
 * If all three attempts fail, Paywint will notify your **email** with details of the failed event.
 
 > **Note:** To avoid missed events, ensure your webhook endpoint is highly available and returns `200 OK` quickly. Any internal processing should happen asynchronously to avoid missed events.
+
+---
+
+## Detailed Webhook Responses
+
+For complete webhook payload examples and detailed field descriptions for each event type, see our [Webhook Responses](/webhook-response) documentation page.
+
+<Card title="Webhook Responses" icon="code" href="/webhook-response">
+  View detailed webhook payload examples, field descriptions, and implementation guidance for all payment events.
+</Card>
