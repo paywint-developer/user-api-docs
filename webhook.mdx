@@ -34,14 +34,16 @@ To configure webhooks in the **Production environment**:
 
 Below is the list of webhook events sent by Paywint.
 
-| Event Name                    | Description                            |
-|-------------------------------|----------------------------------------|
-| `payment.initiated`           | Payment was initiated.                 |
-| `payment.processing`          | Payment is being processed.            |
-| `payment.success`             | Payment was successful.                |
-| `payment.failed`              | Payment failed.                        |
-| `payment.rejected`            | Payment was rejected.                  |
-| `payment.retried`             | Payment was retried with new payment ID. |
+| Event Name                          | Description                                   |
+|-------------------------------------|-----------------------------------------------|
+| `payment.initiated`                 | Payment was initiated.                        |
+| `payment.processing`                | Payment is being processed.                   |
+| `payment.success`                   | Payment was successful.                       |
+| `payment.failed`                    | Payment failed.                               |
+| `payment.rejected`                  | Payment was rejected.                         |
+| `payment.retried`                   | Payment was retried with new payment ID.      |
+| `payment.opened`                    | Payment link was opened by the user.          |
+| `payment.expired`                   | Payment link has been expired.                |
 
 ---
 

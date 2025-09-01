@@ -47,22 +47,6 @@ Sent when a payment is initiated.
 }
 ```
 
-### Payment Succeeded
-
-Sent when a payment is successfully processed and completed.
-
-```json
-{
-  "event": "payment.success",
-  "id": "99036bd3-a8b2-403c-867c-3d03dafbe4b7",
-  "data": {
-    "payment_id": "b91a0f36-b10b-4a31-ae12-e8b4c5ee71f4",
-    "status": "success",
-    "amount": 599
-  },
-  "eventGeneratedTime": 1756451608.069325
-}
-```
 
 ### Payment Processing
 
@@ -80,6 +64,25 @@ Sent when a payment requires additional processing time or manual review.
   "eventGeneratedTime": 1756452761.422979
 }
 ```
+
+
+### Payment Succeeded
+
+Sent when a payment is successfully processed and completed.
+
+```json
+{
+  "event": "payment.success",
+  "id": "99036bd3-a8b2-403c-867c-3d03dafbe4b7",
+  "data": {
+    "payment_id": "b91a0f36-b10b-4a31-ae12-e8b4c5ee71f4",
+    "status": "success",
+    "amount": 599
+  },
+  "eventGeneratedTime": 1756451608.069325
+}
+```
+
 
 ### Payment Failed
 
@@ -131,6 +134,42 @@ Sent when a payment is rejected due to policy violations.
     "amount": 599,
   },
   "eventGeneratedTime": 1756375999.456789
+}
+```
+
+
+### Payment Opened
+
+Sent when a payment link has been opened by as user to initiate payment.
+
+```json
+{
+  "event": "payment.opened",
+  "id": "60a71435-d079-4126-81a2-1977bb70a306",
+  "data": {
+    "payment_id": "a5299046-1f62-4f78-8239-6e724d99c38b",
+    "status": "opened",
+    "amount": 599
+  },
+  "eventGeneratedTime": 1756717250.451172
+}
+```
+
+
+### Payment Expired
+
+Sent when a payment link can no longer be used because it has passed its expiry or has been closed. No further payment attempts can be initiated against this link; users must request a new link (which will create a new payment).
+
+```json
+{
+  "event": "payment.expired",
+  "id": "60a71435-d079-4126-81a2-1977bb70a306",
+  "data": {
+    "payment_id": "a5299046-1f62-4f78-8239-6e724d99c38b",
+    "status": "expired",
+    "amount": 599
+  },
+  "eventGeneratedTime": 1756717250.451172
 }
 ```
 ---
