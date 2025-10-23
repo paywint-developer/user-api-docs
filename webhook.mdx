@@ -17,18 +17,50 @@ All webhook events—such as `initiated`, `processing`, `success`, `failed`, and
 ## Where To Setup
 
 ### Sandbox
-To configure webhooks in the **Sandbox environment**:
 
-1. Go to [Sandbox Dashboard → URLs](https://sandbox.app.paywint.com/app/developer-panel/urls).
-2. Enter your webhook endpoint URL in the provided field.
+Use the **Sandbox environment** to test your webhook setup before moving to production.
+
+1. **Create a Sandbox Account:**  
+   Sign up for a Sandbox account to start testing your integration.
+
+2. **Get API Key:**  
+   Go to the [Developer Panel → API Key](https://sandbox.app.paywint.com/app/developer-panel/api-credentials) section to generate your Sandbox API key.
+
+3. **Configure Webhook URLs:**  
+   In the [Developer Panel → Redirect/Webhook](https://sandbox.app.paywint.com/app/developer-panel/urls) section, you’ll find fields to enter your test endpoint:
+   - **Webhook URL:**  
+     The endpoint that receives specific event webhooks for payment status updates (e.g., `payment.success`, `payment.failed`).  
+     Example: `https://example.com/webhook`
 
 ### Production
-To configure webhooks in the **Production environment**:
 
-1. Go to [Production Dashboard → URLs](https://app.paywint.com/app/developer-panel/urls).
-2. Enter your webhook endpoint URL in the provided field.
+Once your Sandbox testing is complete, you can move to the **Production environment**.
 
+Before enabling your Production setup, please contact our [support team](https://paywint.com/contact) to ensure your API and webhook configurations are properly activated.
+
+1. **Create a Production Account:**  
+Sign up for a Production account.
+
+2. **Enable Production Access:**  
+   Contact our [support team](https://paywint.com/contact) to request activation of your Production API and webhook setup.
+
+3. **Get API Key:**  
+Go to the [Developer Panel → API Keys](https://app.paywint.com/app/developer-panel/api-credentials) section to obtain your Production API key.
+
+4. **Configure Webhook URLs:**
+  In the [Developer Panel → Redirect/Webhook](https://app.paywint.com/app/developer-panel/urls) section, enter your live endpoint:
+  - **Webhook URL:**  
+    The live endpoint that receives real-time payment event webhooks.  
+    Example: `https://yourapp.com/webhook`
+
+5. **Support Contacts:**  
+If you need assistance during setup:  
+- **Email:** [support@paywint.com](mailto:support@paywint.com)  
+- **Phone:** [+1 (408) 461-5543](tel:+14084615543)
+- **Live Chat:** Available via the Paywint Dashboard
 ---
+
+
 
 ## Webhook Events
 
