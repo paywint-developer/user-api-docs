@@ -1,5 +1,5 @@
 ---
-title: "Redirects"
+title: "Customise Redirect Behaviour"
 description: "Display a confirmation page with your customer's order information."
 icon: "arrow-turn-left"
 ---
@@ -16,7 +16,7 @@ It’s how your site knows the result of the payment so you can show the appropr
 1. Your customer clicks “Pay” in your app or website.  
 2. Paywint opens its secure checkout page.  
 3. The customer chooses a payment method and completes the process.  
-4. When the payment finishes, Paywint **redirects the customer back to the page you chose** (your “Callback URL”).  
+4. When the payment finishes, Paywint **redirects the customer back to the page you chose** (your Redirect URL”).  
 5. Paywint adds two small pieces of information to the web address when sending them back:  
 
    * `id`: the unique Paywint payment number  
@@ -46,37 +46,70 @@ Notice the extra `id` and `status` at the end of the web address. You can use th
 | `success`  | The payment went through.                  | “Payment successful! Thank you for your order.”      |
 | `failed`   | The payment did not go through.            | “Something went wrong. Please try again.”            |
 
-> Some payment methods may first show `processing`. This means the final result will come later. In those cases, your system should wait for confirmation (via webhook or checking the payment details in Paywint).
+> Some payment methods may initially display a processing status. This means the final result will be available later. In such cases, your system should wait for confirmation—either through a webhook or by checking the payment details in Paywint.
+---
+
+## Where to Setup
+
+You decide the page where customers should land after payment. This is called your **Redirect URL**.
+
+
+### Sandbox
+
+Use the **Sandbox environment** to test your redirect behavior before moving to production.
+
+1. **Create a Sandbox Account:**  
+   Sign up for a Sandbox account to start testing your integration.
+
+2. **Get API Key:**  
+   Go to the [Developer Panel → API Key](https://sandbox.app.paywint.com/app/developer-panel/api-credentials) section to generate your Sandbox API key.
+
+3. **Configure Redirect URLs:**  
+   In the [Developer Panel → Redirect/Webhook](https://sandbox.app.paywint.com/app/developer-panel/urls) section, you’ll find fields to enter your test endpoints:
+   - **Payment Redirect URL:**  
+     The endpoint to which redirects happen when a specific payment action completes.  
+     Example: `https://example.com/Redirect/payment`
+
+
+### Production
+
+Once your Sandbox testing is complete, you can move to the **Production environment**.
+
+Before enabling your Production setup, please contact our [support team](https://paywint.com/contact) to ensure your API and redirect configurations are properly activated.
+
+1. **Create a Production Account:**  
+Sign up for a Production account.
+
+2. **Enable Production Access:**  
+Contact our [support team](https://paywint.com/contact) to request activation of your Production API and redirect setup.
+
+3. **Get API Key:**  
+Go to the [Developer Panel → API Keys](https://app.paywint.com/app/developer-panel/api-credentials) section to obtain your Production API key.
+
+4. **Set Your Redirect URL:**  
+In the [Developer Panel → Redirect/Webhook](https://app.paywint.com/app/developer-panel/urls) section, enter your live redirect endpoint.  
+  Example: `https://yourapp.com/checkout/payment`
+
+5. **Support Contacts:**  
+If you need assistance during setup:  
+- **Email:** [support@paywint.com](mailto:support@paywint.com)  
+- **Phone:** [+1 (408) 461-5543](tel:+14084615543)
+- **Live Chat:** Available via the Paywint Dashboard
 
 ---
 
-## Where to Set the Callback URL
-
-You decide the page where customers should land after payment. This is called your **Callback URL**.
-
-* **Sandbox (testing):**
-  Go to [Sandbox Dashboard → URLs](https://sandbox.app.paywint.com/app/developer-panel/urls) and enter your page link,
-  e.g. `https://sandbox.yourapp.com/checkout/result`.
-
-* **Production (live):**
-  Go to [Production Dashboard → URLs](https://app.paywint.com/app/developer-panel/urls) and enter your live page link,
-  e.g. `https://yourapp.com/checkout/result`.
-
-You can set different Callback URLs for Sandbox and Production. Just make sure the page exists in both environments.
-
----
 
 ## Why This Matters
 
-* Redirects let your customers **come back to your app smoothly** after paying.
-* You can immediately show them a confirmation screen (success, failure, or rejection).
-* To be 100% sure of the final result, your system should also check Paywint’s webhook or fetch the payment details.
+* Redirects allow customers to **return to your app smoothly** after completing a payment.  
+* You can immediately display a confirmation page showing whether the payment was successful, failed, or rejected.  
+* To ensure complete accuracy, your system should also verify the final result through Paywint’s webhook or by retrieving the payment details.
 
 ---
 
 ## Quick Setup
 
-1. In your Paywint Dashboard, set your **Payment Callback URL** (the page where customers should land after payment).
+1. In [Developer Panel → Redirect/Webhook](https://app.paywint.com/app/developer-panel/urls), set your **Payment Redirect URL** (the page where customers should land after payment).
 2. Make sure this page can read the `status` and `id` from the web address.
 3. Show your customer the right message based on the result.
 
