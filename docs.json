@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Paywint Dashboard API Documentation",
+  "name": "Paywint Developer API Documentation",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -9,9 +9,10 @@
   },
   "favicon": "/favicon.ico",
   "navigation": {
-    "groups": [
+    "tabs": [
       {
-        "group": "Get Started",
+        "tab": "Get Started",
+        "icon": "rocket",
         "pages": [
           "introduction",
           "environments",
@@ -21,21 +22,71 @@
         ]
       },
       {
-        "group": "Payment",
-        "pages": [
-          "api-reference/payment/create-payment",
-          "api-reference/payment/get-payment",
-          "api-reference/payment/list-sent-payments",
-          "api-reference/payment/list-received-payments"
-        ]
-      },
-      {
-        "group": "Wallet",
-        "pages": [
-          "api-reference/wallet/get-wallet"
+        "tab": "API Reference",
+        "icon": "square-terminal",
+        "groups": [
+          {
+            "group": "Payment",
+            "pages": [
+              "api-reference/payment/overview",
+              "api-reference/payment/create-payment",
+              "api-reference/payment/get-payment",
+              "api-reference/payment/list-sent-payments",
+              "api-reference/payment/list-received-payments"
+            ]
+          },
+          {
+            "group": "Wallet",
+            "pages": [
+              "api-reference/wallet/overview",
+              "api-reference/wallet/get-wallet"
+            ]
+          },
+          {
+            "group": "Paywint Gift Cards",
+            "expanded": false,
+            "pages": [
+              "api-reference/paywint-gift-cards/overview",
+              "api-reference/paywint-gift-cards/issue-card",
+              "api-reference/paywint-gift-cards/reload-card",
+              "api-reference/paywint-gift-cards/list-cards",
+              "api-reference/paywint-gift-cards/get-card"
+            ]
+          },
+          {
+            "group": "Payee Management",
+            "expanded": false,
+            "pages": [
+              "api-reference/payees/overview",
+              "api-reference/payees/create",
+              "api-reference/payees/list",
+              "api-reference/payees/get",
+              "api-reference/payees/update",
+              "api-reference/payees/delete"
+            ]
+          },
+          {
+            "group": "Payee Addresses",
+            "expanded": false,
+            "pages": [
+              "api-reference/payees/address/overview",
+              "api-reference/payees/address/create-address",
+              "api-reference/payees/address/list-address",
+              "api-reference/payees/address/get-address",
+              "api-reference/payees/address/update-address",
+              "api-reference/payees/address/set-default-address",
+              "api-reference/payees/address/delete-address"
+            ]
+          }
         ]
       }
     ]
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs"
+  },
+  "interaction": {
+    "drilldown": false
   },
   "logo": {
     "light": "/logo/app-logo-dark.png",
