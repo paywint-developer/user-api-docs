@@ -1,0 +1,203 @@
+﻿---
+title: "Inline Checkout SDK"
+description: "Embed Paywint Inline Checkout directly in your application."
+icon: "credit-card"
+---
+
+The Paywint Inline Checkout SDK renders a managed checkout component inside your page. Your backend creates a short-lived [checkout token](/api-reference/payment/checkout/create-checkout-token), then your frontend passes that token to the SDK with the payment configuration.
+
+## Load the SDK
+
+Load the Paywint Checkout SDK and initialize the checkout mount point.
+
+```html
+<head>
+  <script>window.$paywint=window.$paywint||{};$paywint.checkout=$paywint.checkout||{ready:function(){}};</script>
+  <script src="https://YOUR_PAYWINT_SDK_HOST/checkout.js" defer></script>
+</head>
+<body>
+
+  <!-- Element to mount the checkout SDK -->
+  <div id="checkout-root"></div>
+  
+  <!-- Optional custom submit button -->
+  <button id="host-submit-button" type="button">Submit From Host</button>
+
+  <script>
+    $paywint.checkout.ready = () => {
+      const pwCheckout = new PaywintCheckout();
+
+      const pwCheckoutConfig = {
+        token: "CHECKOUT_TOKEN_FROM_YOUR_BACKEND",
+        payOptions: ["card", "wallet"],
+        amount: 120,
+        currency: "USD",
+        invoice_number: "INV-1001",
+        description: "Order #1001",
+        hide_submit_button: false,
+        style: {
+          "pw-border-color": "#d9e6f4",
+          "pw-active-border-color": "#025865",
+          "pw-background-color": "#ffffff",
+          "pw-text-color": "#1e293b",
+          "pw-input-border-color": "1px solid #cbd5e1",
+          "pw-input-radius": "8px",
+          "pw-input-height": "40px",
+          "pw-submit-button-background-color": "#000000",
+          "pw-submit-button-text-color": "#ffffff",
+          "pw-checkout-font": "Inter, sans-serif"
+        }
+      };
+
+      const payerAddressData = {
+        payer_first_name: "Jane",
+        payer_last_name: "Doe",
+        payer_address_line_1: "123 Main Street",
+        payer_city: "New York",
+        payer_state: "NY",
+        payer_zip: "10001",
+        payer_country: "US"
+      };
+
+      pwCheckout
+        .init("#checkout-root", pwCheckoutConfig, (event) => {
+          console.log("Paywint event:", event);
+        })
+        .then(() => {
+          pwCheckout.updatePayorAddress(payerAddressData);
+
+          document.getElementById("host-submit-button")?.addEventListener("click", () => {
+            pwCheckout.triggerSubmit();
+          });
+        })
+        .catch((error) => {
+          document.getElementById("checkout-root").textContent = error?.message || "Failed to initialize checkout.";
+        });
+    };
+  </script>
+</body>
+```
+
+<Info>
+  Replace `https://YOUR_PAYWINT_SDK_HOST/checkout.js` with the checkout SDK URL provided for your environment.
+| Environment | Checkout.js URL
+| --- | --- |
+| `Production` | `https://script.paywint.com/checkout.js` |
+| `Sandbox` | `https://sandbox.script.paywint.com/checkout.js` |
+</Info>
+
+## Configuration
+
+Pass the configuration object as the second argument to `init(selector, config, eventsCB)`.
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `token` | `string` | Yes | Checkout token created by your backend. |
+| `payOptions` | `string[]` | Yes | Payment methods to show. Supported values include `card` and `wallet`. |
+| `amount` | `number` | Yes | Payment amount. The SDK validates that this matches the token context. |
+| `currency` | `string` | Recommended | ISO currency code, for example `USD`. |
+| `invoice_number` | `string` | Optional | Your invoice or order reference. |
+| `description` | `string` | Optional | Description shown in checkout and returned in events where applicable. |
+| `hide_submit_button` | `boolean \| null` | Optional | Set to `true` when you want to submit from your own host button using `triggerSubmit()`. |
+| `style` | `object \| string` | Optional | CSS variable overrides for the checkout component. |
+
+## Payer Address
+
+Use `updatePayorAddress()` after `init()` resolves. You can call it again whenever the payer edits their billing address in your host page.
+
+```js
+pwCheckout.updatePayorAddress({
+  payer_first_name: "Jane",
+  payer_last_name: "Doe",
+  payer_address_line_1: "123 Main Street",
+  payer_city: "New York",
+  payer_state: "NY",
+  payer_zip: "10001",
+  payer_country: "US"
+});
+```
+
+## Custom Submit Button
+
+If your integration hides the SDK submit button, call `triggerSubmit()` from your own button after `init()` completes.
+
+```js
+document.getElementById("host-submit-button")?.addEventListener("click", () => {
+  pwCheckout.triggerSubmit();
+});
+```
+
+## Events
+
+Pass an event callback as the third argument to `init()`. The SDK calls this function as checkout state changes.
+
+```js
+pwCheckout.init("#checkout-root", pwCheckoutConfig, (event) => {
+  console.log(event.event, event.message, event.data);
+});
+```
+
+Common event payloads include an `event` name, a human-readable `message`, and optional `data` for the payment or verification step.
+
+## Styling
+
+The `style` configuration accepts an object of CSS variable overrides. Keys may be provided with or without the leading `--`.
+
+```js
+style: {
+    "pw-border-color": "#d9e6f4",
+    "pw-border-width": "2px",
+    "pw-active-border-color": "#025865",
+    "pw-disabled-border-color": "#f8fff0",
+    "pw-disabled-opacity": "0.5",
+    "pw-background-color": "#ffffff",
+    "pw-text-color": "#1e293b",
+    "pw-input-label-text-color": "#1e293b",
+    "pw-subtext-text-color": "#64748b",
+    "pw-muted-background-color": "rgb(127 127 127 / 0.12)",
+    "pw-error-text-color": "#ff5757",
+    "pw-success-surface-start-background-color": "#f0fdf4",
+    "pw-success-surface-end-background-color": "#dcfce7",
+    "pw-success-icon-background-color": "#dcfce7",
+    "pw-success-icon-color": "#16a34a",
+    "pw-success-text-color": "#16a34a",
+    "pw-input-border-color": "1px solid #cbd5e1",
+    "pw-input-radius": "8px",
+    "pw-input-height": "40px",
+    "pw-input-font-size": "18px",
+    "pw-input-background-color": "#ffffff",
+    "pw-submit-button-background-color": "#000000",
+    "pw-submit-button-text-color": "#ffffff",
+    "pw-submit-button-radius": "8px",
+    "pw-file-upload-background-color": "#ffffff",
+    "pw-file-upload-text-color": "#000000",
+    "pw-file-upload-button-radius": "8px",
+    "pw-file-upload-button-height": "44px",
+    "pw-file-upload-border-color": "#000000",
+    "pw-file-upload-border-width": "2px",
+    "pw-file-upload-border-style": "dotted",
+    "pw-checkout-font": "Inter, sans-serif",
+    "pw-otp-gap": "10px",
+    "pw-otp-width": "50px",
+    "pw-otp-height": "40px",
+    "pw-otp-font-size": "18px",
+    "pw-otp-border-color": "1px solid #cbd5e1",
+    "pw-otp-radius": "8px",
+    "pw-otp-background-color": "#ffffff",
+    "pw-otp-text-color": "#1e293b",
+    "pw-otp-placeholder-text-color": "#94a3b8",
+    "pw-otp-focus-border-color": "#025865"
+}
+```
+
+<Note>
+  When `pw-checkout-font` is provided, the SDK does not load its default Inter font stylesheet. Load your custom font on the host page if the font is not already available.
+</Note>
+
+## SDK Methods
+
+| Method | Description |
+| --- | --- |
+| `init(selector, config, eventsCB)` | Mounts checkout into an element matching the selector. The selector must be an ID selector such as `#checkout-root`. |
+| `updatePayorAddress(address)` | Updates payer billing address data after checkout has initialized. |
+| `triggerSubmit()` | Programmatically submits checkout. Use this for host-controlled submit buttons. |

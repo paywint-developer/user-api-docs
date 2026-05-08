@@ -26,10 +26,17 @@
         "icon": "square-terminal",
         "groups": [
           {
+            "group": "Accept Payment",
+            "pages": [
+              "api-reference/payment/checkout/overview",
+              "api-reference/payment/checkout/create-payment-link",
+              "api-reference/payment/checkout/create-checkout-token"
+            ]
+          },
+          {
             "group": "Payment",
             "pages": [
               "api-reference/payment/overview",
-              "api-reference/payment/create-payment",
               "api-reference/payment/get-payment",
               "api-reference/payment/list-sent-payments",
               "api-reference/payment/list-received-payments"
