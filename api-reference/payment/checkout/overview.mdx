@@ -1,0 +1,156 @@
+---
+title: "Overview"
+description: "Securely accept payments online."
+icon: "book-open"
+---
+
+
+Use a prebuilt checkout page to start accepting online payments.
+
+
+<Tabs>
+
+  <Tab title="Embedded form (iFrame)">
+    Embed the Paywint checkout inside your website using an iFrame.  
+    This option keeps customers inside your UI while Paywint handles all sensitive data and compliance.
+
+    <Frame>
+      <img src="/assets/checkout/embedded-form.png" alt="Embedded checkout form" />
+    </Frame>
+
+    <Steps>
+      <Step title="Create a payment link">
+        Your backend calls 
+        [Create Payment Link](/api-reference/payment/checkout/create-payment-link) 
+        with the amount and payer information.
+      </Step>
+
+      <Step title="Receive the checkout URL">
+        Paywint returns a <code>payment_link</code> URL representing the checkout session.
+      </Step>
+
+      <Step title="Embed the checkout">
+        You load the <code>payment_link</code> inside an <code>&lt;iframe&gt;</code> on your website.
+      </Step>
+
+      <Step title="Customer completes the payment">
+        The customer reviews and completes the payment inside the embedded checkout.
+      </Step>
+
+      <Step title="Receive lifecycle webhooks">
+        Paywint sends webhook notifications to your server as the payment progresses  
+        (session opened, status updates, and final result).  
+        For full event details, see the [Webhooks](/webhook) documentation.
+      </Step>
+
+      <Step title="Redirect the customer">
+        After the checkout finishes, Paywint redirects the customer to the **Redirect URL**  
+        that you configure in your developer dashboard.  
+        The redirect includes the final payment status, and your application should handle  
+        the next steps based on that status.
+        </Step>
+    </Steps>
+  </Tab>
+
+
+
+
+
+  <Tab title="Paywint-hosted page (redirect)">
+    Redirect customers to Paywint-hosted checkout page.
+
+    This option gives you the fastest setup with no front-end integration work.
+    Customers leave your site, complete the payment on Paywint’s secure checkout page,
+    and are redirected back to you once the payment finishes.
+
+    <Frame>
+      <img src="/assets/checkout/hosted-page.png" alt="Hosted checkout page" />
+    </Frame>
+
+    <Steps>
+      <Step title="Create a payment link">
+        Your backend calls 
+        [Create Payment Link](/api-reference/payment/checkout/create-payment-link) 
+        with the relevant payment details.
+      </Step>
+
+      <Step title="Receive the checkout URL">
+        Paywint returns a <code>payment_link</code> URL that represents the hosted checkout page.
+      </Step>
+
+      <Step title="Redirect the customer">
+        Your front-end navigates the customer to the <code>payment_link</code>  
+        (typically by opening it in a new window or redirecting the browser).
+      </Step>
+
+      <Step title="Customer completes the payment">
+        The customer completes the entire checkout process on Paywint’s hosted page.  
+        All sensitive data entry and validation is handled by Paywint.
+      </Step>
+
+      <Step title="Receive lifecycle webhooks">
+        As the payment moves through different states, Paywint sends corresponding webhook
+        notifications to your server.  
+        Refer to the [Webhooks](/webhook) documentation for all available event types.
+      </Step>
+
+      <Step title="Customer is returned to your application">
+        After the checkout completes, Paywint redirects the customer to the **Redirect URL**  
+        configured in your developer dashboard.  
+        The redirect includes the final payment status, and your application should display  
+        a confirmation, error message, or next step based on that status.
+      </Step>
+    </Steps>
+  </Tab>
+
+
+
+
+
+
+  <Tab title="Inline Checkout SDK">
+    Build a fully custom checkout experience using Paywint-managed UI components.
+    Your backend issues a short-lived checkout token, the frontend SDK handles OTP verification,
+    card validation, and payment — all within your own UI.
+
+    <Frame>
+      <img src="/assets/checkout/embedded-components.png" alt="Inline Checkout" />
+    </Frame>
+
+    <Steps>
+      <Step title="Issue a checkout token (your backend)">
+        Your backend calls the appropriate token endpoint, passing the payer identity,
+        payment amount, currency, and scope.
+
+        Paywint returns a short-lived `checkout_token` (valid for 30 minutes).
+
+        - [Generate Checkout Token Here](/api-reference/payment/checkout/create-checkout-token)
+      </Step>
+
+      <Step title="Initialize the SDK (frontend)">
+        Pass the `checkout_token` to the Paywint Inline Checkout SDK along with the
+        payment amount and currency.
+```js
+const pwCheckoutConfig = {
+  token: "CHECKOUT_TOKEN_FROM_YOUR_BACKEND",
+  payOptions: ["card", "wallet"],
+  amount: 120,
+  currency: "USD",
+  invoice_number: "INV-1001",
+  description: "Order #1001"
+}
+pwCheckout.init("#checkout-root", pwCheckoutConfig, (event) => {
+  console.log(event.event, event.message, event.data);
+});
+```
+        - [View Complete Implementation Here](/api-reference/payment/checkout/inline-checkout-sdk)
+      </Step>
+      <Step title="Receive lifecycle webhooks (your backend)">
+        As the payment moves through states, Paywint sends webhook notifications
+        to your server. See the [Webhooks](/webhook) documentation for
+        all available event types and payload shapes.
+      </Step>
+    </Steps>
+  </Tab>
+
+</Tabs>
